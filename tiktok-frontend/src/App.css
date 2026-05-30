@@ -23,7 +23,7 @@ body {
 .logo {
   font-size: 24px;
   font-weight: 800;
-  color: #3f51b5; /* Azul oscuro */
+  color: #141E30; /* Color oscuro */
   display: flex;
   align-items: center;
   gap: 8px;
@@ -35,28 +35,40 @@ body {
 }
 
 .nav-links span {
-  color: #333;
+  color: #666;
   font-weight: 600;
   cursor: pointer;
+  padding-bottom: 4px;
 }
 
 .nav-links span:hover {
-  color: #a700ff;
+  color: #141E30;
+}
+
+/* Estado activo de las pestañas */
+.nav-links span.activo {
+  color: #141E30;
+  border-bottom: 2px solid #141E30;
 }
 
 .nav-btn {
-  background: #bd00ff;
+  background: #141E30; /* Combina con el nuevo fondo */
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+  transition: background 0.3s;
 }
 
-/* Sección Púrpura (Hero) */
+.nav-btn:hover {
+  background: #243B55;
+}
+
+/* Sección del fondo (Aquí cambiamos el color a Azul Medianoche elegante) */
 .hero-section {
-  background: linear-gradient(135deg, #6c48ff, #bf00ff);
+  background: linear-gradient(135deg, #141E30, #243B55); 
   padding: 50px 20px;
   text-align: center;
   position: relative;
@@ -95,18 +107,15 @@ body {
 .btn-paste {
   background: transparent;
   border: none;
-  color: #6c48ff;
+  color: #141E30;
   font-weight: 600;
   font-size: 15px;
   padding: 0 15px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 5px;
 }
 
 .btn-paste:hover {
-  color: #3f51b5;
+  color: #4052ee;
 }
 
 .btn-download {
