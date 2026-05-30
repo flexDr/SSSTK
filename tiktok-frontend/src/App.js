@@ -5,6 +5,7 @@ function App() {
   const [url, setUrl] = useState('');
   const [resultado, setResultado] = useState(null);
   const [cargando, setCargando] = useState(false);
+  const [modo, setModo] = useState('video'); // Opciones: 'video', 'historia', 'audio'
 
   const manejarDescarga = async (e) => {
     e.preventDefault();
@@ -12,10 +13,11 @@ function App() {
     setResultado(null);
 
     try {
+      // Enviamos también el "modo" para que el backend sepa qué extraer luego
       const response = await fetch('https://ssstk.onrender.com/api/descargar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url })
+        body: JSON.stringify({ url, modo })
       });
       const data = await response.json();
       setResultado(data);
@@ -27,7 +29,6 @@ function App() {
     }
   };
 
-  // Función para el botón de "Pegar"
   const pegarDelPortapapeles = async () => {
     try {
       const texto = await navigator.clipboard.readText();
@@ -37,31 +38,57 @@ function App() {
     }
   };
 
+  const mostrarAlertaApp = () => {
+    alert("¡Nuestra aplicación oficial para celulares estará disponible muy pronto!");
+  };
+
   return (
     <div className="app-main">
       
-      {/* Barra de Navegación idéntica al ejemplo */}
       <nav className="navbar">
-        <div className="logo">
+        <div className="logo" onClick={() => setModo('video')} style={{cursor: 'pointer'}}>
           <span>⬇</span> SSSTK
         </div>
         <div className="nav-links">
-          <span>Descargar historias de TikTok</span>
-          <span>Descargar audio de TikTok</span>
+          <span 
+            className={modo === 'video' ? 'activo' : ''} 
+            onClick={() => setModo('video')}
+          >
+            Video MP4
+          </span>
+          <span 
+            className={modo === 'historia' ? 'activo' : ''} 
+            onClick={() => setModo('historia')}
+          >
+            Descargar historias
+          </span>
+          <span 
+            className={modo === 'audio' ? 'activo' : ''} 
+            onClick={() => setModo('audio')}
+          >
+            Descargar audio
+          </span>
         </div>
-        <button className="nav-btn">App ➔</button>
+        <button className="nav-btn" onClick={mostrarAlertaApp}>App ➔</button>
       </nav>
 
-      {/* Sección Púrpura de Búsqueda */}
       <header className="hero-section">
-        <h1>Descargar videos de TikTok</h1>
+        <h1>
+          {modo === 'video' && 'Descargar videos de TikTok'}
+          {modo === 'historia' && 'Descargar historias de TikTok'}
+          {modo === 'audio' && 'Descargar audio de TikTok (MP3)'}
+        </h1>
         
         <form onSubmit={manejarDescarga}>
           <div className="search-wrapper">
             <input 
               type="text" 
               className="search-input"
-              placeholder="Pegar enlace" 
+              placeholder={
+                modo === 'video' ? "Pegar enlace del video..." : 
+                modo === 'historia' ? "Pegar enlace de la historia..." : 
+                "Pegar enlace para extraer audio MP3..."
+              } 
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               required 
@@ -71,7 +98,7 @@ function App() {
               className="btn-paste" 
               onClick={pegarDelPortapapeles}
             >
-              📋 Pegar
+              Pegar
             </button>
             <button type="submit" className="btn-download" disabled={cargando}>
               {cargando ? 'Procesando...' : 'Descargar'}
@@ -79,30 +106,26 @@ function App() {
           </div>
         </form>
 
-        {/* Banner AdSense principal (El que más paga) */}
         <div className="ad-container ad-margin-bottom">
           <span>[Bloque de Anuncio AdSense Premium]</span>
         </div>
       </header>
 
-      {/* Resultados de descarga */}
       <main>
         {resultado && resultado.status === "success" && (
           <div className="result-box">
-            <h3>¡Video Listo!</h3>
+            <h3>¡Listo!</h3>
             <p>{resultado.video_titulo}</p>
             <a href={resultado.download_url} download className="btn-final-download">
-              Descargar MP4 sin marca de agua
+              Descargar {modo === 'audio' ? 'MP3' : 'MP4'}
             </a>
           </div>
         )}
 
-        {/* Banner AdSense inferior */}
         <div className="ad-container ad-margin-top">
           <span>[Bloque de Anuncio AdSense Secundario]</span>
         </div>
       </main>
-
     </div>
   );
 }
