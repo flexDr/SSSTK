@@ -52,7 +52,7 @@ body {
 }
 
 .nav-btn {
-  background: #141E30; /* Combina con el nuevo fondo */
+  background: #141E30; /* Color oscuro que contrasta */
   color: white;
   border: none;
   padding: 10px 20px;
@@ -66,9 +66,9 @@ body {
   background: #243B55;
 }
 
-/* Sección del fondo (Aquí cambiamos el color a Azul Medianoche elegante) */
+/* Sección del fondo (Nuevo color Mango llamativo) */
 .hero-section {
-  background: linear-gradient(135deg, #141E30, #243B55); 
+  background: linear-gradient(135deg, #FF6F00, #FFA000); 
   padding: 50px 20px;
   text-align: center;
   position: relative;
@@ -161,33 +161,73 @@ body {
   margin-top: 30px;
 }
 
-/* Resultados */
-.result-box {
+/* Resultados detallados (Como el ejemplo de imagen) */
+.result-box-detailed {
   max-width: 750px;
   margin: -20px auto 40px auto;
   padding: 30px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-  text-align: center;
+  text-align: left;
   position: relative;
   z-index: 10;
 }
 
-.result-box h3 {
-  color: #28a745;
-  margin-bottom: 10px;
+.seccion-titulo {
+  color: #2E7D32;
+  margin-bottom: 20px;
+  font-size: 22px;
+  font-weight: 700;
 }
 
-.btn-final-download {
-  display: inline-block;
-  padding: 12px 25px;
-  background: #28a745;
+.video-preview-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 20px auto;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.video-preview {
+  width: 100%;
+  display: block;
+}
+
+.btn-download-preview {
+  display: block;
+  width: 100%;
+  padding: 15px;
+  background: #4052ee;
   color: white;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: bold;
-  margin-top: 15px;
+  text-align: center;
+  font-size: 16px;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+
+.btn-download-preview:hover {
+  background: #2b39c0;
+}
+
+.publicacion-texto {
+  color: #555;
+  font-size: 14px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.post-stats {
+  display: flex;
+  justify-content: space-between;
+  color: #888;
+  font-size: 12px;
+  border-top: 1px solid #eee;
+  padding-top: 10px;
 }
 
 /* Para celulares */
