@@ -16,7 +16,7 @@ function App() {
       const response = await fetch('https://ssstk.onrender.com/api/descargar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ url, modo })
+        body: JSON.stringify({ url })
       });
       const data = await response.json();
       setResultado(data);
@@ -102,7 +102,6 @@ function App() {
           <div className="result-box-detailed">
             <h3 className="seccion-titulo">Resultado de búsqueda</h3>
             
-            {/* AHORA MOSTRAMOS LA IMAGEN DE PORTADA EN LUGAR DEL CUADRO GRIS */}
             <div className="video-preview-container">
               {resultado.thumbnail_url ? (
                 <img src={resultado.thumbnail_url} alt="Portada del video" className="video-preview" style={{ borderRadius: '8px' }} />
@@ -113,8 +112,13 @@ function App() {
               )}
             </div>
 
-            <a href={resultado.download_url} download className="btn-download-preview">
-              Descargar {modo === 'audio' ? 'MP3' : 'MP4'}
+            {/* AQUÍ ESTÁN LOS DOS BOTONES JUNTOS */}
+            <a href={resultado.download_url_mp4} download className="btn-download-preview">
+              Descargar MP4
+            </a>
+            
+            <a href={resultado.download_url_mp3} download className="btn-download-preview btn-audio">
+              Descargar MP3
             </a>
 
             <p className="publicacion-texto">
