@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import './App.css'; 
 
 function App() {
   const [url, setUrl] = useState('');
@@ -12,7 +12,6 @@ function App() {
     setResultado(null);
 
     try {
-      // ¡Aquí está tu enlace real de Render!
       const response = await fetch('https://ssstk.onrender.com/api/descargar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -21,7 +20,7 @@ function App() {
       const data = await response.json();
       setResultado(data);
     } catch (error) {
-      console.error("Error al procesar:", error);
+      console.error("Error:", error);
       alert("Hubo un error al conectar con el servidor.");
     } finally {
       setCargando(false);
@@ -29,12 +28,47 @@ function App() {
   };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '50px auto', textAlign: 'center' }}>
-      <header>
-        <h1 style={{ color: '#333' }}>Descargador de Videos</h1>
-        <p style={{ color: '#666' }}>Obtén tu contenido sin marcas de agua.</p>
+    <div className="app-container">
+      <header className="header">
+        <h1>Descargador de Videos</h1>
+        <p>Obtén tu contenido en alta calidad y sin marcas de agua.</p>
       </header>
 
+      {/* Espacio reservado para AdSense */}
+      <div className="ad-space">
+        <span>Publicidad AdSense (728x90)</span>
+      </div>
+
+      <main>
+        <form className="download-form" onSubmit={manejarDescarga}>
+          <input 
+            type="text" 
+            className="input-url"
+            placeholder="Pega el enlace de TikTok aquí..." 
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            required 
+          />
+          <button type="submit" className="btn-submit" disabled={cargando}>
+            {cargando ? 'Procesando...' : 'Obtener Video'}
+          </button>
+        </form>
+
+        {resultado && resultado.status === "success" && (
+          <div className="result-box">
+            <h3>¡Video Listo!</h3>
+            <p>{resultado.video_titulo}</p>
+            <a href={resultado.download_url} download className="btn-download">
+              Descargar MP4
+            </a>
+          </div>
+        )}
+      </main>
+    </div>
+  );
+}
+
+export default App;
       {/* Espacio para futuro anuncio de AdSense */}
       <div style={{ height: '90px', backgroundColor: '#f0f0f0', margin: '20px 0', border: '1px dashed #ccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <small style={{ color: '#aaa' }}>[Espacio para Banner AdSense]</small>
