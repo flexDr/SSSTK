@@ -5,7 +5,7 @@ function App() {
   const [url, setUrl] = useState('');
   const [resultado, setResultado] = useState(null);
   const [cargando, setCargando] = useState(false);
-  const [modo, setModo] = useState('video'); // Opciones: 'video', 'historia', 'audio'
+  const [modo, setModo] = useState('video'); 
 
   const manejarDescarga = async (e) => {
     e.preventDefault();
@@ -13,8 +13,6 @@ function App() {
     setResultado(null);
 
     try {
-      // Enviamos el "modo" para que el backend sepa qué extraer.
-      // Actualicé la estructura de datos simulada para mostrar vista previa, estadísticas, etc.
       const response = await fetch('https://ssstk.onrender.com/api/descargar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -51,22 +49,13 @@ function App() {
           <span>⬇</span> SSSTK
         </div>
         <div className="nav-links">
-          <span 
-            className={modo === 'video' ? 'activo' : ''} 
-            onClick={() => setModo('video')}
-          >
+          <span className={modo === 'video' ? 'activo' : ''} onClick={() => setModo('video')}>
             Video MP4
           </span>
-          <span 
-            className={modo === 'historia' ? 'activo' : ''} 
-            onClick={() => setModo('historia')}
-          >
+          <span className={modo === 'historia' ? 'activo' : ''} onClick={() => setModo('historia')}>
             Descargar historias
           </span>
-          <span 
-            className={modo === 'audio' ? 'activo' : ''} 
-            onClick={() => setModo('audio')}
-          >
+          <span className={modo === 'audio' ? 'activo' : ''} onClick={() => setModo('audio')}>
             Descargar audio
           </span>
         </div>
@@ -94,11 +83,7 @@ function App() {
               onChange={(e) => setUrl(e.target.value)}
               required 
             />
-            <button 
-              type="button" 
-              className="btn-paste" 
-              onClick={pegarDelPortapapeles}
-            >
+            <button type="button" className="btn-paste" onClick={pegarDelPortapapeles}>
               Pegar
             </button>
             <button type="submit" className="btn-download" disabled={cargando}>
@@ -117,29 +102,29 @@ function App() {
           <div className="result-box-detailed">
             <h3 className="seccion-titulo">Resultado de búsqueda</h3>
             
-            {/* Vista previa de video con controles */}
+            {/* AHORA MOSTRAMOS LA IMAGEN DE PORTADA EN LUGAR DEL CUADRO GRIS */}
             <div className="video-preview-container">
-              <video className="video-preview" controls>
-                <source src={resultado.download_url} type="video/mp4" />
-                Tu navegador no soporta la reproducción de video.
-              </video>
+              {resultado.thumbnail_url ? (
+                <img src={resultado.thumbnail_url} alt="Portada del video" className="video-preview" style={{ borderRadius: '8px' }} />
+              ) : (
+                <div style={{width: '100%', height: '200px', backgroundColor: '#eee', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                  Sin vista previa
+                </div>
+              )}
             </div>
 
-            {/* Botón de descarga azul grande y claro */}
             <a href={resultado.download_url} download className="btn-download-preview">
               Descargar {modo === 'audio' ? 'MP3' : 'MP4'}
             </a>
 
-            {/* Texto de la publicación simulado */}
             <p className="publicacion-texto">
-              {resultado.titulo}
+              {resultado.video_titulo}
             </p>
             
-            {/* Estadísticas simuladas */}
             <div className="post-stats">
-              <span>Hace 1 hora</span>
-              <span>3538 likes</span>
-              <span>312 comentarios</span>
+              <span>Descarga segura</span>
+              <span>100% Gratis</span>
+              <span>SSSTK</span>
             </div>
           </div>
         )}
