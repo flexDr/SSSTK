@@ -245,3 +245,29 @@ body {
 .btn-audio:hover {
   background: #218838;
 }
+/* Pie de página legal para AdSense */
+.footer-legal {
+  text-align: center;
+  padding: 30px 20px;
+  margin-top: 50px;
+  background-color: #ffffff;
+  color: #888;
+  font-size: 13px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.footer-legal p {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: #FF6F00; /* Color mango para combinar */
+  text-decoration: none;
+  font-weight: 600;
+  margin: 0 10px;
+  cursor: pointer;
+}
+
+.footer-links a:hover {
+  text-decoration: underline;
+}
