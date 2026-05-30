@@ -1,6 +1,5 @@
 from flask import Flask, request, jsonify, Response, stream_with_context
 from flask_cors import CORS
-import yt_dlp
 import requests
 import urllib.parse
 
@@ -9,7 +8,7 @@ CORS(app)
 
 @app.route('/', methods=['GET'])
 def inicio():
-    return "¡El motor de descargas está activo!"
+    return "¡El motor de descargas está activo con API ultrarrápida!"
 
 @app.route('/api/descargar', methods=['POST'])
 def procesar_video():
@@ -19,42 +18,29 @@ def procesar_video():
     if not tiktok_url or 'tiktok.com' not in tiktok_url:
         return jsonify({"error": "Por favor, ingresa un enlace válido de TikTok"}), 400
 
-    ydl_opts = {
-        'quiet': True,
-        'no_warnings': True,
-        'format': 'best',
-    }
-
     try:
-        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(tiktok_url, download=False)
-            
-            titulo = info.get('title', 'Video de TikTok')
-            miniatura = info.get('thumbnail', '') 
-            
-            # Extraemos el video por defecto
-            url_video = info.get('url')
-            
-            # Buscamos específicamente el formato de solo audio
-            url_audio = None
-            for f in info.get('formats', []):
-                if f.get('acodec') != 'none' and f.get('vcodec') == 'none':
-                    url_audio = f.get('url')
-                    break
-            
-            # Si por alguna razón no hay pista de solo audio, usamos el video como respaldo
-            if not url_audio:
-                url_audio = url_video 
+        # Usamos la API gratuita de TikWM para obtener el MP3 puro y el Video sin marca
+        api_url = f"https://www.tikwm.com/api/?url={tiktok_url}"
+        respuesta = requests.get(api_url).json()
 
-            # Codificamos AMBAS URLs
+        if respuesta.get('code') == 0:
+            data = respuesta['data']
+            
+            titulo = data.get('title', 'Video_TikTok')
+            miniatura = data.get('cover', '')
+            
+            # Aquí obtenemos los enlaces reales separados y limpios
+            url_video = data.get('play', '') # Video 100% sin marca de agua
+            url_audio = data.get('music', '') # Audio MP3 puro y real
+
+            # Codificamos las URLs para nuestro puente
             url_segura_video = urllib.parse.quote(url_video, safe='')
             url_segura_audio = urllib.parse.quote(url_audio, safe='')
-            
-            # Creamos los dos puentes
+
+            # Creamos los puentes
             url_puente_mp4 = f"https://ssstk.onrender.com/api/proxy?url={url_segura_video}&modo=video"
             url_puente_mp3 = f"https://ssstk.onrender.com/api/proxy?url={url_segura_audio}&modo=audio"
 
-            # Enviamos ambos enlaces a la página web
             return jsonify({
                 "status": "success",
                 "video_titulo": titulo,
@@ -62,10 +48,12 @@ def procesar_video():
                 "download_url_mp4": url_puente_mp4,
                 "download_url_mp3": url_puente_mp3
             })
+        else:
+            return jsonify({"error": "No se pudo extraer el video. Revisa el enlace."}), 400
 
     except Exception as e:
         print(f"Error: {e}")
-        return jsonify({"error": "TikTok bloqueó la petición. Intenta con otro enlace."}), 500
+        return jsonify({"error": "Error al conectar con los servidores de extracción."}), 500
 
 
 @app.route('/api/proxy', methods=['GET'])
@@ -78,20 +66,24 @@ def proxy_descarga():
 
     try:
         headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
-            "Referer": "https://www.tiktok.com/"
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/120.0.0.0 Safari/537.36"
         }
         
         req = requests.get(url_tiktok, stream=True, headers=headers)
         
-        extension = "mp3" if modo == "audio" else "mp4"
-        mime_type = "audio/mpeg" if modo == "audio" else "video/mp4"
+        # Le decimos estrictamente al celular qué tipo de archivo es
+        if modo == "audio":
+            extension = "mp3"
+            mime_type = "audio/mpeg"
+        else:
+            extension = "mp4"
+            mime_type = "video/mp4"
 
         return Response(
             stream_with_context(req.iter_content(chunk_size=1024*1024)),
-            content_type=req.headers.get('content-type', mime_type),
+            content_type=mime_type,
             headers={
-                'Content-Disposition': f'attachment; filename="SSSTK_Descarga.{extension}"'
+                'Content-Disposition': f'attachment; filename="SSSTK_{extension.upper()}.{extension}"'
             }
         )
     except Exception as e:
