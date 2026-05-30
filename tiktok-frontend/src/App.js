@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css'; 
+import './App.css';
 
 function App() {
   const [url, setUrl] = useState('');
@@ -28,88 +28,45 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <header className="header">
-        <h1>Descargador de Videos</h1>
-        <p>Obtén tu contenido en alta calidad y sin marcas de agua.</p>
-      </header>
+    <>
+      <div className="app-container">
+        <header className="header">
+          <h1>Descargador de Videos</h1>
+          <p>Obtén tu contenido en alta calidad y sin marcas de agua.</p>
+        </header>
 
-      {/* Espacio reservado para AdSense */}
-      <div className="ad-space">
-        <span>Publicidad AdSense (728x90)</span>
+        {/* Espacio reservado para AdSense */}
+        <div className="ad-space">
+          <span>Publicidad AdSense (728x90)</span>
+        </div>
+
+        <main>
+          <form className="download-form" onSubmit={manejarDescarga}>
+            <input
+              type="text"
+              className="input-url"
+              placeholder="Pega el enlace de TikTok aquí..."
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              required
+            />
+            <button type="submit" className="btn-submit" disabled={cargando}>
+              {cargando ? 'Procesando...' : 'Obtener Video'}
+            </button>
+          </form>
+
+          {resultado && resultado.status === "success" && (
+            <div className="result-box">
+              <h3>¡Video Listo!</h3>
+              <p>{resultado.video_titulo}</p>
+              <a href={resultado.download_url} download className="btn-download">
+                Descargar MP4
+              </a>
+            </div>
+          )}
+        </main>
       </div>
-
-      <main>
-        <form className="download-form" onSubmit={manejarDescarga}>
-          <input 
-            type="text" 
-            className="input-url"
-            placeholder="Pega el enlace de TikTok aquí..." 
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            required 
-          />
-          <button type="submit" className="btn-submit" disabled={cargando}>
-            {cargando ? 'Procesando...' : 'Obtener Video'}
-          </button>
-        </form>
-
-        {resultado && resultado.status === "success" && (
-          <div className="result-box">
-            <h3>¡Video Listo!</h3>
-            <p>{resultado.video_titulo}</p>
-            <a href={resultado.download_url} download className="btn-download">
-              Descargar MP4
-            </a>
-          </div>
-        )}
-      </main>
-    </div>
-  );
-}
-
-export default App;
-      {/* Espacio para futuro anuncio de AdSense */}
-      <div style={{ height: '90px', backgroundColor: '#f0f0f0', margin: '20px 0', border: '1px dashed #ccc', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <small style={{ color: '#aaa' }}>[Espacio para Banner AdSense]</small>
-      </div>
-
-      <main>
-        <form onSubmit={manejarDescarga}>
-          <input
-            type="text"
-            placeholder="Pega el enlace de TikTok aquí..."
-            value={url}
-            onChange={(e) => setUrl(e.target.value)}
-            required
-            style={{ width: '80%', padding: '10px', fontSize: '16px', borderRadius: '5px', border: '1px solid #ccc' }}
-          />
-          <br /><br />
-          <button
-            type="submit"
-            disabled={cargando}
-            style={{ padding: '10px 20px', fontSize: '16px', backgroundColor: cargando ? '#ccc' : '#0070f3', color: '#fff', border: 'none', borderRadius: '5px', cursor: cargando ? 'not-allowed' : 'pointer' }}
-          >
-            {cargando ? 'Procesando...' : 'Obtener Video'}
-          </button>
-        </form>
-
-        {/* Muestra el resultado simulado que envía tu backend */}
-        {resultado && resultado.status === "success" && (
-          <div style={{ marginTop: '30px', padding: '20px', border: '1px solid #4CAF50', borderRadius: '5px', backgroundColor: '#e8f5e9' }}>
-            <h3 style={{ color: '#2E7D32' }}>¡Video Listo!</h3>
-            <p>{resultado.video_titulo}</p>
-            <a
-              href={resultado.download_url}
-              download
-              style={{ display: 'inline-block', marginTop: '10px', padding: '10px 15px', backgroundColor: '#4CAF50', color: 'white', textDecoration: 'none', borderRadius: '5px' }}
-            >
-              Descargar MP4 de Prueba
-            </a>
-          </div>
-        )}
-      </main>
-    </div>
+    </>
   );
 }
 
