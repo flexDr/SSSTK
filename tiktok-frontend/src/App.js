@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import './App.css'; 
 
 function App() {
   const [url, setUrl] = useState('');
@@ -27,46 +27,83 @@ function App() {
     }
   };
 
+  // Función para el botón de "Pegar"
+  const pegarDelPortapapeles = async () => {
+    try {
+      const texto = await navigator.clipboard.readText();
+      setUrl(texto);
+    } catch (err) {
+      alert("No se pudo leer el portapapeles. Pega el enlace manualmente.");
+    }
+  };
+
   return (
-    <>
-      <div className="app-container">
-        <header className="header">
-          <h1>Descargador de Videos</h1>
-          <p>Obtén tu contenido en alta calidad y sin marcas de agua.</p>
-        </header>
-
-        {/* Espacio reservado para AdSense */}
-        <div className="ad-space">
-          <span>Publicidad AdSense (728x90)</span>
+    <div className="app-main">
+      
+      {/* Barra de Navegación idéntica al ejemplo */}
+      <nav className="navbar">
+        <div className="logo">
+          <span>⬇</span> SSSTK
         </div>
+        <div className="nav-links">
+          <span>Descargar historias de TikTok</span>
+          <span>Descargar audio de TikTok</span>
+        </div>
+        <button className="nav-btn">App ➔</button>
+      </nav>
 
-        <main>
-          <form className="download-form" onSubmit={manejarDescarga}>
-            <input
-              type="text"
-              className="input-url"
-              placeholder="Pega el enlace de TikTok aquí..."
+      {/* Sección Púrpura de Búsqueda */}
+      <header className="hero-section">
+        <h1>Descargar videos de TikTok</h1>
+        
+        <form onSubmit={manejarDescarga}>
+          <div className="search-wrapper">
+            <input 
+              type="text" 
+              className="search-input"
+              placeholder="Pegar enlace" 
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              required
+              required 
             />
-            <button type="submit" className="btn-submit" disabled={cargando}>
-              {cargando ? 'Procesando...' : 'Obtener Video'}
+            <button 
+              type="button" 
+              className="btn-paste" 
+              onClick={pegarDelPortapapeles}
+            >
+              📋 Pegar
             </button>
-          </form>
+            <button type="submit" className="btn-download" disabled={cargando}>
+              {cargando ? 'Procesando...' : 'Descargar'}
+            </button>
+          </div>
+        </form>
 
-          {resultado && resultado.status === "success" && (
-            <div className="result-box">
-              <h3>¡Video Listo!</h3>
-              <p>{resultado.video_titulo}</p>
-              <a href={resultado.download_url} download className="btn-download">
-                Descargar MP4
-              </a>
-            </div>
-          )}
-        </main>
-      </div>
-    </>
+        {/* Banner AdSense principal (El que más paga) */}
+        <div className="ad-container ad-margin-bottom">
+          <span>[Bloque de Anuncio AdSense Premium]</span>
+        </div>
+      </header>
+
+      {/* Resultados de descarga */}
+      <main>
+        {resultado && resultado.status === "success" && (
+          <div className="result-box">
+            <h3>¡Video Listo!</h3>
+            <p>{resultado.video_titulo}</p>
+            <a href={resultado.download_url} download className="btn-final-download">
+              Descargar MP4 sin marca de agua
+            </a>
+          </div>
+        )}
+
+        {/* Banner AdSense inferior */}
+        <div className="ad-container ad-margin-top">
+          <span>[Bloque de Anuncio AdSense Secundario]</span>
+        </div>
+      </main>
+
+    </div>
   );
 }
 
