@@ -8,7 +8,7 @@ CORS(app)
 
 @app.route('/', methods=['GET'])
 def inicio():
-    return "¡El motor de descargas está activo con API ultrarrápida!"
+    return "¡Motor de descargas en Alta Definición (HD) activo!"
 
 @app.route('/api/descargar', methods=['POST'])
 def procesar_video():
@@ -19,8 +19,8 @@ def procesar_video():
         return jsonify({"error": "Por favor, ingresa un enlace válido de TikTok"}), 400
 
     try:
-        # Usamos la API gratuita de TikWM para obtener el MP3 puro y el Video sin marca
-        api_url = f"https://www.tikwm.com/api/?url={tiktok_url}"
+        # Agregamos hd=1 a la URL de la API para forzar la máxima calidad
+        api_url = f"https://www.tikwm.com/api/?url={tiktok_url}&hd=1"
         respuesta = requests.get(api_url).json()
 
         if respuesta.get('code') == 0:
@@ -29,15 +29,24 @@ def procesar_video():
             titulo = data.get('title', 'Video_TikTok')
             miniatura = data.get('cover', '')
             
-            # Aquí obtenemos los enlaces reales separados y limpios
-            url_video = data.get('play', '') # Video 100% sin marca de agua
-            url_audio = data.get('music', '') # Audio MP3 puro y real
+            # FILTRO DE PROTECCIÓN: Evitar que los carruseles de fotos rompan el archivo
+            if 'images' in data and not data.get('play'):
+                return jsonify({"error": "Este enlace es un carrusel de fotos, no un video MP4. Intenta con un video normal."}), 400
 
-            # Codificamos las URLs para nuestro puente
+            # MEJORA DE CALIDAD: Intentamos sacar 'hdplay' (Alta Definición). Si no hay, usamos 'play'
+            url_video = data.get('hdplay')
+            if not url_video:
+                url_video = data.get('play', '')
+                
+            url_audio = data.get('music', '')
+
+            # Si por alguna razón TikTok no envía el video, frenamos antes de dar error
+            if not url_video:
+                 return jsonify({"error": "El servidor de TikTok no devolvió el archivo. Intenta de nuevo."}), 400
+
             url_segura_video = urllib.parse.quote(url_video, safe='')
             url_segura_audio = urllib.parse.quote(url_audio, safe='')
 
-            # Creamos los puentes
             url_puente_mp4 = f"https://ssstk.onrender.com/api/proxy?url={url_segura_video}&modo=video"
             url_puente_mp3 = f"https://ssstk.onrender.com/api/proxy?url={url_segura_audio}&modo=audio"
 
@@ -49,7 +58,7 @@ def procesar_video():
                 "download_url_mp3": url_puente_mp3
             })
         else:
-            return jsonify({"error": "No se pudo extraer el video. Revisa el enlace."}), 400
+            return jsonify({"error": "No se pudo extraer el video. Asegúrate de que la cuenta no sea privada."}), 400
 
     except Exception as e:
         print(f"Error: {e}")
@@ -71,7 +80,6 @@ def proxy_descarga():
         
         req = requests.get(url_tiktok, stream=True, headers=headers)
         
-        # Le decimos estrictamente al celular qué tipo de archivo es
         if modo == "audio":
             extension = "mp3"
             mime_type = "audio/mpeg"
