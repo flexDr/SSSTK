@@ -41,6 +41,15 @@ function App() {
     alert("¡Nuestra aplicación oficial para celulares estará disponible muy pronto!");
   };
 
+  // Función simple para mostrar los textos legales requeridos por AdSense
+  const mostrarLegal = (tipo) => {
+    if (tipo === 'privacidad') {
+      alert("POLÍTICA DE PRIVACIDAD:\n\nNo almacenamos tus datos personales ni guardamos copias de los videos que descargas. Los archivos se procesan en tiempo real. Utilizamos cookies de terceros (como Google AdSense) para mostrar anuncios personalizados. Al usar nuestra web, aceptas el uso de estas cookies.");
+    } else {
+      alert("TÉRMINOS DE USO:\n\nEsta herramienta es estrictamente para uso personal. Respetamos los derechos de autor y no nos hacemos responsables del mal uso que los usuarios le den al contenido descargado. No debes usar los videos descargados con fines comerciales sin el permiso del creador original.");
+    }
+  };
+
   return (
     <div className="app-main">
       
@@ -112,7 +121,6 @@ function App() {
               )}
             </div>
 
-            {/* AQUÍ ESTÁN LOS DOS BOTONES JUNTOS */}
             <a href={resultado.download_url_mp4} download className="btn-download-preview">
               Descargar MP4
             </a>
@@ -137,6 +145,17 @@ function App() {
           <span>[Bloque de Anuncio AdSense Secundario]</span>
         </div>
       </main>
+
+      {/* PIE DE PÁGINA OBLIGATORIO PARA GOOGLE ADSENSE */}
+      <footer className="footer-legal">
+        <p>© 2026 SSSTK. Todos los derechos reservados.</p>
+        <div className="footer-links">
+          <span onClick={() => mostrarLegal('privacidad')}>Política de Privacidad</span>
+          |
+          <span onClick={() => mostrarLegal('terminos')}>Términos de Uso</span>
+        </div>
+      </footer>
+
     </div>
   );
 }
