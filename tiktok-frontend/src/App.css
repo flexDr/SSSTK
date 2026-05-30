@@ -2,137 +2,189 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  background-color: #f4f7f6; /* Fondo gris muy suave y limpio */
+  background-color: #f0f2f5;
   color: #333;
+}
+
+/* Barra de Navegación */
+.navbar {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  min-height: 100vh;
+  padding: 15px 5%;
+  background: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 
-.app-container {
-  width: 100%;
-  max-width: 600px;
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.05); /* Sombra elegante */
-  margin: 20px;
+.logo {
+  font-size: 24px;
+  font-weight: 800;
+  color: #3f51b5; /* Azul oscuro */
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.header {
-  text-align: center;
-  margin-bottom: 30px;
+.nav-links {
+  display: flex;
+  gap: 20px;
 }
 
-.header h1 {
-  font-size: 28px;
-  color: #111;
-  font-weight: 700;
-  margin-bottom: 8px;
+.nav-links span {
+  color: #333;
+  font-weight: 600;
+  cursor: pointer;
 }
 
-.header p {
-  color: #666;
-  font-size: 15px;
+.nav-links span:hover {
+  color: #a700ff;
 }
 
-.ad-space {
-  background-color: #f8f9fa;
-  border: 1px dashed #ced4da;
+.nav-btn {
+  background: #bd00ff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
   border-radius: 8px;
-  height: 100px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: #adb5bd;
-  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Sección Púrpura (Hero) */
+.hero-section {
+  background: linear-gradient(135deg, #6c48ff, #bf00ff);
+  padding: 50px 20px;
+  text-align: center;
+  position: relative;
+}
+
+.hero-section h1 {
+  color: white;
+  font-size: 36px;
   margin-bottom: 30px;
+  font-weight: 700;
 }
 
-.download-form {
+/* Contenedor de la barra de búsqueda */
+.search-wrapper {
+  max-width: 750px;
+  margin: 0 auto;
+  background: white;
   display: flex;
-  flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  padding: 6px;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  margin-bottom: 40px;
 }
 
-.input-url {
-  width: 100%;
+.search-input {
+  flex: 1;
+  border: none;
   padding: 15px;
   font-size: 16px;
-  border: 2px solid #e9ecef;
   border-radius: 8px;
   outline: none;
-  transition: border-color 0.3s ease;
+  background: transparent;
 }
 
-.input-url:focus {
-  border-color: #0070f3; /* Azul profesional al hacer clic */
-}
-
-.btn-submit {
-  width: 100%;
-  padding: 15px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #0070f3;
+.btn-paste {
+  background: transparent;
   border: none;
-  border-radius: 8px;
+  color: #6c48ff;
+  font-weight: 600;
+  font-size: 15px;
+  padding: 0 15px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
-.btn-submit:hover:not(:disabled) {
-  background-color: #005bb5;
-}
-
-.btn-submit:active:not(:disabled) {
-  transform: scale(0.98); /* Efecto de clic real */
-}
-
-.btn-submit:disabled {
-  background-color: #a5c8ff;
-  cursor: not-allowed;
-}
-
-.result-box {
-  margin-top: 30px;
-  padding: 25px;
-  border: 1px solid #d3ebd3;
-  background-color: #f1faf1;
-  border-radius: 8px;
-  text-align: center;
-}
-
-.result-box h3 {
-  color: #2b7a2b;
-  margin-bottom: 10px;
-  font-size: 20px;
-}
-
-.result-box p {
-  color: #555;
-  margin-bottom: 20px;
-  font-size: 14px;
+.btn-paste:hover {
+  color: #3f51b5;
 }
 
 .btn-download {
-  display: inline-block;
-  padding: 12px 25px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #fff;
-  background-color: #28a745;
-  text-decoration: none;
+  background: #4052ee;
+  color: white;
+  border: none;
+  padding: 15px 35px;
   border-radius: 6px;
-  transition: background-color 0.3s ease;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
 }
 
-.btn-download:hover {
-  background-color: #218838;
+.btn-download:hover:not(:disabled) {
+  background: #2b39c0;
+}
+
+.btn-download:disabled {
+  background: #a0a8f5;
+  cursor: not-allowed;
+}
+
+/* Espacios de AdSense */
+.ad-container {
+  background: rgba(255, 255, 255, 0.9);
+  max-width: 750px;
+  margin: 0 auto;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px dashed #ccc;
+  color: #888;
+  border-radius: 8px;
+}
+
+.ad-margin-bottom {
+  margin-bottom: 30px;
+}
+
+.ad-margin-top {
+  margin-top: 30px;
+}
+
+/* Resultados */
+.result-box {
+  max-width: 750px;
+  margin: -20px auto 40px auto;
+  padding: 30px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  text-align: center;
+  position: relative;
+  z-index: 10;
+}
+
+.result-box h3 {
+  color: #28a745;
+  margin-bottom: 10px;
+}
+
+.btn-final-download {
+  display: inline-block;
+  padding: 12px 25px;
+  background: #28a745;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  font-weight: bold;
+  margin-top: 15px;
+}
+
+/* Para celulares */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .search-wrapper { flex-wrap: wrap; }
+  .btn-download { width: 100%; margin-top: 5px; }
+  .btn-paste { border-left: none; }
 }
