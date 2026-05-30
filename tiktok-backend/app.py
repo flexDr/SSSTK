@@ -15,7 +15,6 @@ def inicio():
 def procesar_video():
     datos = request.get_json()
     tiktok_url = datos.get('url')
-    modo = datos.get('modo', 'video')
 
     if not tiktok_url or 'tiktok.com' not in tiktok_url:
         return jsonify({"error": "Por favor, ingresa un enlace válido de TikTok"}), 400
@@ -31,33 +30,43 @@ def procesar_video():
             info = ydl.extract_info(tiktok_url, download=False)
             
             titulo = info.get('title', 'Video de TikTok')
-            miniatura = info.get('thumbnail', '') # AQUÍ EXTRAEMOS LA IMAGEN DE PORTADA
-            url_descarga = None
+            miniatura = info.get('thumbnail', '') 
             
-            if modo == 'audio':
-                formatos = info.get('formats', [])
-                for f in formatos:
-                    if f.get('acodec') != 'none' and f.get('vcodec') == 'none':
-                        url_descarga = f.get('url')
-                        break
-                if not url_descarga:
-                    url_descarga = info.get('url')
-            else:
-                url_descarga = info.get('url')
+            # Extraemos el video por defecto
+            url_video = info.get('url')
+            
+            # Buscamos específicamente el formato de solo audio
+            url_audio = None
+            for f in info.get('formats', []):
+                if f.get('acodec') != 'none' and f.get('vcodec') == 'none':
+                    url_audio = f.get('url')
+                    break
+            
+            # Si por alguna razón no hay pista de solo audio, usamos el video como respaldo
+            if not url_audio:
+                url_audio = url_video 
 
-            url_segura = urllib.parse.quote(url_descarga, safe='')
-            url_puente = f"https://ssstk.onrender.com/api/proxy?url={url_segura}&modo={modo}"
+            # Codificamos AMBAS URLs
+            url_segura_video = urllib.parse.quote(url_video, safe='')
+            url_segura_audio = urllib.parse.quote(url_audio, safe='')
+            
+            # Creamos los dos puentes
+            url_puente_mp4 = f"https://ssstk.onrender.com/api/proxy?url={url_segura_video}&modo=video"
+            url_puente_mp3 = f"https://ssstk.onrender.com/api/proxy?url={url_segura_audio}&modo=audio"
 
+            # Enviamos ambos enlaces a la página web
             return jsonify({
                 "status": "success",
                 "video_titulo": titulo,
-                "download_url": url_puente,
-                "thumbnail_url": miniatura # ENVIAMOS LA IMAGEN AL FRONTEND
+                "thumbnail_url": miniatura,
+                "download_url_mp4": url_puente_mp4,
+                "download_url_mp3": url_puente_mp3
             })
 
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "TikTok bloqueó la petición. Intenta con otro enlace."}), 500
+
 
 @app.route('/api/proxy', methods=['GET'])
 def proxy_descarga():
