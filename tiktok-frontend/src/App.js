@@ -13,7 +13,8 @@ function App() {
     setResultado(null);
 
     try {
-      // Enviamos también el "modo" para que el backend sepa qué extraer luego
+      // Enviamos el "modo" para que el backend sepa qué extraer.
+      // Actualicé la estructura de datos simulada para mostrar vista previa, estadísticas, etc.
       const response = await fetch('https://ssstk.onrender.com/api/descargar', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -113,12 +114,33 @@ function App() {
 
       <main>
         {resultado && resultado.status === "success" && (
-          <div className="result-box">
-            <h3>¡Listo!</h3>
-            <p>{resultado.video_titulo}</p>
-            <a href={resultado.download_url} download className="btn-final-download">
+          <div className="result-box-detailed">
+            <h3 className="seccion-titulo">Resultado de búsqueda</h3>
+            
+            {/* Vista previa de video con controles */}
+            <div className="video-preview-container">
+              <video className="video-preview" controls>
+                <source src={resultado.download_url} type="video/mp4" />
+                Tu navegador no soporta la reproducción de video.
+              </video>
+            </div>
+
+            {/* Botón de descarga azul grande y claro */}
+            <a href={resultado.download_url} download className="btn-download-preview">
               Descargar {modo === 'audio' ? 'MP3' : 'MP4'}
             </a>
+
+            {/* Texto de la publicación simulado */}
+            <p className="publicacion-texto">
+              {resultado.titulo}
+            </p>
+            
+            {/* Estadísticas simuladas */}
+            <div className="post-stats">
+              <span>Hace 1 hora</span>
+              <span>3538 likes</span>
+              <span>312 comentarios</span>
+            </div>
           </div>
         )}
 
