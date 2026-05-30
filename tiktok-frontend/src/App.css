@@ -237,3 +237,11 @@ body {
   .btn-download { width: 100%; margin-top: 5px; }
   .btn-paste { border-left: none; }
 }
+.btn-audio {
+  background: #28a745;
+  margin-top: -10px; /* Acerca el botón al de MP4 */
+}
+
+.btn-audio:hover {
+  background: #218838;
+}
