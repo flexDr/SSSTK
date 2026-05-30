@@ -30,7 +30,8 @@ def procesar_video():
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(tiktok_url, download=False)
             
-            titulo = info.get('title', 'Video_TikTok')
+            titulo = info.get('title', 'Video de TikTok')
+            miniatura = info.get('thumbnail', '') # AQUÍ EXTRAEMOS LA IMAGEN DE PORTADA
             url_descarga = None
             
             if modo == 'audio':
@@ -44,24 +45,20 @@ def procesar_video():
             else:
                 url_descarga = info.get('url')
 
-            # CODIFICAMOS LA URL PARA PASARLA POR NUESTRO PUENTE
             url_segura = urllib.parse.quote(url_descarga, safe='')
-            
-            # EL ENLACE QUE SE ENVÍA A REACT AHORA ES TU PROPIO SERVIDOR
             url_puente = f"https://ssstk.onrender.com/api/proxy?url={url_segura}&modo={modo}"
 
             return jsonify({
                 "status": "success",
                 "video_titulo": titulo,
-                "download_url": url_puente
+                "download_url": url_puente,
+                "thumbnail_url": miniatura # ENVIAMOS LA IMAGEN AL FRONTEND
             })
 
     except Exception as e:
         print(f"Error: {e}")
         return jsonify({"error": "TikTok bloqueó la petición. Intenta con otro enlace."}), 500
 
-
-# ESTA ES LA RUTA QUE OBLIGA AL NAVEGADOR A DESCARGAR EL ARCHIVO
 @app.route('/api/proxy', methods=['GET'])
 def proxy_descarga():
     url_tiktok = request.args.get('url')
@@ -81,7 +78,6 @@ def proxy_descarga():
         extension = "mp3" if modo == "audio" else "mp4"
         mime_type = "audio/mpeg" if modo == "audio" else "video/mp4"
 
-        # AQUÍ ESTÁ LA MAGIA: 'attachment' ES LO QUE OBLIGA LA DESCARGA DIRECTA
         return Response(
             stream_with_context(req.iter_content(chunk_size=1024*1024)),
             content_type=req.headers.get('content-type', mime_type),
